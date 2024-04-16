@@ -1,0 +1,21 @@
+security:
+  jwt:
+    token:
+      secret-key: ${JWT_SECRET}
+
+server:
+  port: 8082
+  error:
+    include-stacktrace: never
+spring:
+  datasource:
+    url: jdbc:mysql://172.18.52.160:3306/spms2?useSSL=false&serverTimezone=UTC
+    username: spms
+    password: Qwert!234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
