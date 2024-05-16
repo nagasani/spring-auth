@@ -24,48 +24,50 @@ import com.auth.springauth.config.auth.SecurityFilter;
 
 @Configuration
 @EnableWebSecurity
-public class AuthConfig {
-  @Autowired
-  SecurityFilter securityFilter;
-
-  @Bean
-  SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception 
-  {
-    return httpSecurity
-    	.cors(cors -> cors.configurationSource(corsConfigurationSource())) // Use defined CORS settings
-        .csrf(csrf -> csrf.disable())
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(authorize -> authorize
-        	.requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll() 
-            .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/v1/books").hasRole("ADMIN")
-            .anyRequest().authenticated())
-        .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-        .build();
-  }
-
-  @Bean
-  AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-      throws Exception {
-    return authenticationConfiguration.getAuthenticationManager();
-  }
-
-  @Bean
-  PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
-  
-  @Bean
-  CorsConfigurationSource corsConfigurationSource() {
-      CorsConfiguration configuration = new CorsConfiguration();
-      configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Allow frontend origin
-      configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-      configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
-      configuration.setAllowCredentials(true); // If you need to send cookies or authentication details
-      configuration.setMaxAge(3600L); // How long the response from a pre-flight request can be cached
-
-      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-      source.registerCorsConfiguration("/**", configuration);
-      return source;
-  }
+public class AuthConfig 
+{
+	  @Autowired
+	  SecurityFilter securityFilter;
+	
+	  @Bean
+	  SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception 
+	  {
+	    return httpSecurity
+	    	.cors(cors -> cors.configurationSource(corsConfigurationSource())) // Use defined CORS settings
+	        .csrf(csrf -> csrf.disable())
+	        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+	        .authorizeHttpRequests(authorize -> authorize
+	        	.requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll() 
+	            .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
+	            .requestMatchers(HttpMethod.POST, "/api/v1/books").hasRole("ADMIN")
+	            .anyRequest().authenticated())
+	        .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+	        .build();
+	  }
+	
+	  @Bean
+	  AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception 
+	  {
+		  return authenticationConfiguration.getAuthenticationManager();
+	  }
+	
+	  @Bean
+	  PasswordEncoder passwordEncoder() 
+	  {
+		  return new BCryptPasswordEncoder();
+	  }
+	  
+	  @Bean
+	  CorsConfigurationSource corsConfigurationSource() {
+	      CorsConfiguration configuration = new CorsConfiguration();
+	      configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Allow frontend origin
+	      configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+	      configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+	      configuration.setAllowCredentials(true); // If you need to send cookies or authentication details
+	      configuration.setMaxAge(3600L); // How long the response from a pre-flight request can be cached
+	
+	      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	      source.registerCorsConfiguration("/**", configuration);
+	      return source;
+	  }
 }
